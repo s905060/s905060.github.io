@@ -1,0 +1,576 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<title>Ultimate Texas Hold'em Strategy Calculator</title>
+		<link title="currentstyle" href="css/pages.css" rel="stylesheet" media="screen">
+		<!-- <link rel="stylesheet" href="css/layout.css"> -->
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Ultimate Texas Hold'em Strategy Calculator</title>
+
+		<!-- <script language="javascript" src="js/menu.js"></script> -->
+		<script language="javascript" src="js/prototype.js"></script>
+		<style type="text/css">
+			#deck 
+			{ 
+				border: 0px;
+				padding: 0px;
+				margin: 0px;
+				background:#101010;
+			}
+			.small_card
+			{
+				border: 0px; 
+				margin: 0px;
+				padding: 1px;
+				width: 7%;
+				height: 100%;	
+				cursor: hand;
+			}
+			.large_card 
+			{
+				border: 0px; 
+				margin: 0px;			
+				width: 100%; 
+				height: 50%;
+			}
+		</style>
+		<script type="text/javascript">
+		    var wakeup;
+		 
+			function _clear()
+			{
+				$('stats').style.display = 'none';
+				$('payout_display').style.display = 'none';
+				$('handp').update("");
+				$('handc').update("");
+                var t = document.getElementById("ttab");
+				t.rows[0].style.display = 'none';
+                t.rows[1].style.display = 'none';
+
+				for (var i=0; i < 7; i++) $('cardImages'+i).src = "images/cards/large/back.gif";
+				for (var i=0; i < 7; i++) document.calc.cards[i].value = "";
+                updateCards();
+
+				return true;
+			}
+
+			function _load()
+			{
+				$('result').style.display = 'none';
+				$('payout_display').style.display = 'none';
+
+                var t = document.getElementById("ttab");
+				t.rows[0].style.display = 'none';
+                t.rows[1].style.display = 'none';
+				//_clear();
+				
+				wakeup = 1;
+
+				return true;
+			}
+			
+			function _showpaytable()
+			{
+				if ($('payout_display').style.display == '') $('payout_display').style.display = 'none';
+				else $('payout_display').style.display = '';
+				//$('result').style.display = 'none';
+				return true;
+			}						
+						
+			function isCard(card)
+			{
+			    card = card.toLowerCase();
+				if ((!card) || (card.length != 2)) return false;
+				var ranks = '123456789tjqka';
+				var suits = 'hsdc';
+				var rank = card.charAt(0);
+			    var suit = card.charAt(1);
+				if ((ranks.indexOf(rank) == -1) || (suits.indexOf(suit) == -1)) return false;
+				return true;
+			}
+
+			function convertCard(card)
+			{
+				card = card.toLowerCase();
+				var ranks = '23456789tjqk1';
+				var suits = 'hsdc';
+				var rank = card.charAt(0);
+			    var suit = card.charAt(1);
+				
+				var output = ranks.indexOf(rank) + 13*suits.indexOf(suit);
+				
+				return output;
+			}
+
+			function selectCard(i, card)
+			{
+			    if (wakeup == 1) {
+			      				 wakeup = 0;
+				}
+			
+	            name = "cardSmall";				
+				for (var j=0; j < 7; j++){
+				  oldCard = document.calc.cards[j].value;
+				  if (oldCard != "")  $('cardImages'+j.toString()).src = "images/cards/large/" + oldCard.toLowerCase() + ".gif";				
+				}
+														
+				if (!card)
+				{
+					document.calc.cards[i].value = "";
+					$('cardImages'+i).src = "images/cards/large/back.gif";
+					oldCard = document.calc.cards[i].value;
+					document.calc.cards[i].value= "";
+				}
+				else
+				{
+				    var num_cards = 0;				
+					for (var j=0; j < 7; j++) {
+					   oldCard = document.calc.cards[j].value;
+					   if (j!=i && oldCard == card) {
+				          $(name+oldCard).src = "images/cards/small/"+oldCard+".gif";
+			    	      document.calc.cards[j].value = "";
+					      $('cardImages'+j).src = "images/cards/large/back.gif";					      
+					      return false;
+				       }
+					   if (i==j || isCard(oldCard)) num_cards++;
+				    }
+					if (i>=7) i = 6;
+					var cardfix = card;
+					if (cardfix == 'ac') cardfix = '1c';
+					if (cardfix == 'as') cardfix = '1s';
+					if (cardfix == 'ad') cardfix = '1d';
+					if (cardfix == 'ah') cardfix = '1h';
+					document.calc.cards[i].value = cardfix;
+					$('cardImages'+i.toString()).src = "images/cards/large/" + card.toLowerCase() + ".gif";
+				}
+                updateCards();
+				if (num_cards==2 || num_cards==5 || num_cards==7) calculate();
+				return true;
+			}
+
+			function updateCards()
+			{
+	            name = "cardSmall";				  				  			
+				var suits = ['h', 's', 'd', 'c'];
+				var ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 't', 'j', 'q', 'k', '1'];
+				for (var i=0; i < suits.length; i++)
+				{
+					for (var j=0; j < ranks.length; j++)
+					{
+                       $(name+ranks[j]+suits[i]).src = "images/cards/small/" +ranks[j]+suits[i]+ ".gif";
+					}
+				}
+				for (var i=0; i<7; i++)
+				{
+				   card = document.calc.cards[i].value;
+				   if (isCard(card)) $(name+card.toLowerCase()).src = "images/cards/small/back.gif";
+				}
+			}
+
+			function _check()
+			{
+				var cards = document.calc.cards;
+				for (var i=0; i < 2; i++)
+				{
+					if (!isCard(cards[i].value))
+					{
+						alert("You must select 2 player cards.");
+						return false;
+					}
+				}								
+				var num_ccards = 5;
+				for (var i=2; i < 7; i++)
+				{
+					if (!cards[i].value || cards[i].value == "")
+					{
+						num_ccards--;
+						continue;
+					}
+					
+					if (!isCard(cards[i].value))
+					{
+						alert("Invalid community cards.");
+						return false;
+					}
+				}
+				
+				if (num_ccards != 0 && num_ccards != 3 && num_ccards != 5)
+				{	
+					alert("You must select 0, 3 or 5 community cards.");
+					return false;
+				}		
+				for (var i=0; i < cards.length-1; i++)
+					if (cards[i].value != "")
+					{
+						for (var j=i+1; j < cards.length; j++)
+							if (cards[j].value != "")
+							{
+								if (cards[i].value.toLowerCase() == cards[j].value.toLowerCase())
+								{
+									alert("All cards must be different.");
+									return false;
+								}
+							}
+					}
+         						
+				/*
+				var payouts = document.calc.payouts;
+				if (payouts.length != 10)
+				{
+					alert("Invalid payout values");
+					return false;
+				}
+				for (var i=0; i < payouts.length; i++)
+					if (isNaN(parseFloat(payouts[i].value)))
+					{
+						alert("Invalid payout value");
+						return false;					
+					}
+				*/
+				for (var i = 0; i < document.calc.optimization.length; i++) {
+					if (document.calc.optimization[i].checked) {
+						optimization = document.calc.optimization[i].value;
+						break;
+					}
+				}
+				if (!optimization)
+				{
+					alert('You must select an optimization strategy');
+					return false;
+				}
+				return true;
+			}
+           
+		    function display_hand(start, finish) {
+			   var hand = "";
+				for (var i=start; i <= finish; i++) {
+				   card = document.calc.cards[i].value;
+				   if (card != "") hand += "<img src=\"images/cards/small/" + card.toLowerCase() + ".gif\">";
+				}
+			    return hand;
+			}
+
+			function _submit()
+			{
+				if (!_check()) return false;
+				$('ev1').update('');
+				$('ev2').update('');
+				$('decision').update('');
+				calculate();
+			}
+			
+			function calculate()
+			{			
+				//if (!_check()) return false;;				
+					
+				cardValues = new Array(document.calc.cards.length);
+				var card;
+				senderIndex = 0;				
+				for (var i=0; i < cardValues.length; i++) {
+				   card = document.calc.cards[i].value;
+				   if (card != "") {
+				      if (card == '1d' || card == '1D') card = 'ad';
+					  if (card == '1c' || card == '1C') card = 'ac';
+					  if (card == '1h' || card == '1H') card = 'ah';
+					  if (card == '1s' || card == '1S') card = 'as';
+				      cardValues[senderIndex] = card;
+					  senderIndex++;
+				   }
+				}
+				
+				var optimization;
+				for (var i = 0; i < document.calc.optimization.length; i++) {
+					if (document.calc.optimization[i].checked) {
+						optimization = document.calc.optimization[i].value;
+						break;
+					}
+				}
+											
+
+				  $('handp').update(display_hand(0,1));
+				  $('handc').update(display_hand(2,senderIndex-1));
+				  var t = document.getElementById("ttab");
+				  t.rows[0].style.display = '';
+
+				cards = document.calc.cards;
+				var playerCards = new Array(2);
+				for (var i=0; i < 2; i++) {
+				   card = cards[i].value;
+				   playerCards[i] = convertCard(card);
+				}				
+				var communityCards = new Array();
+				var num_cards=0;
+				
+				for (var i=2; i < 7; i++)  {
+				   if (isCard(cards[i].value)) {
+				      card = cards[i].value;
+				      communityCards.push(convertCard(card));
+					  num_cards++;
+				   }
+				}	
+
+				  var URL = "http://www.beatingbonuses.com/uh_exec.php?player=" + playerCards.join(' ') + "&board=" + communityCards.join(' ');
+				
+				  for (var i=0; i < 2; i++) $('cardImages'+i).src = "images/cards/large/" + document.calc.cards[i].value.toLowerCase() + ".gif";
+				  
+				  new Ajax.Request(URL, {
+					 method: 'post',
+					 onSuccess: function(transport) {
+						var output = transport.responseText.split(' ');
+						if (output.length == 2)
+						{
+					        $('result').style.display = '';
+						    $('stats').style.display = '';						
+						    $('error').style.display = 'none';
+							var ev1 = Number(output[0]);
+							var ev2 = Number(output[1]);
+							$('ev1').update(ev1.toFixed(2));
+							$('ev2').update(ev2.toFixed(2));
+							if (optimization == 'hand')
+							{	// Optimization per hand
+							    if (num_cards == 3) {
+								   t.rows[1].style.display = '';
+								   $('percentage').style.display = '';
+								   $('ev1').update('Raise EV: ' +  ev2.toFixed(2));
+								   $('ev2').update('Check EV: ' +  ev1.toFixed(2));
+								   if (ev2 > ev1) $('decision').update('Raise 2x');
+								   else  $('decision').update('Check');
+								}
+								else if (num_cards == 5) {
+								   t.rows[1].style.display = '';
+								   $('percentage').style.display = '';
+								   $('ev1').update('Call EV: ' +  ev1.toFixed(2));
+								   $('ev2').update('Fold EV: ' +  ev2.toFixed(2));
+								   if (ev1 > ev2) $('decision').update('Call');
+								   else  {
+								     $('decision').update('Fold');
+									 $('cardImages0').src = "images/cards/large/back.gif";
+					                 $('cardImages1').src = "images/cards/large/back.gif";
+								   }
+								   
+								}
+								else {
+								   t.rows[1].style.display = 'none';
+								   $('percentage').style.display = 'none';
+								   $('ev1').update('');
+								   $('ev2').update('');
+								   if (ev1 > 0.5) $('decision').update('Raise 4x');
+								   else  $('decision').update('Check');
+								}
+							}
+							else
+							{	// Optimization per unit wagered
+							    if (num_cards == 3) {
+								   t.rows[1].style.display = '';
+								   $('percentage').style.display = '';
+								   $('ev1').update('Raise EV: ' +  ev2.toFixed(2));
+								   $('ev2').update('Check EV: ' +  ev1.toFixed(2));
+								   if (ev2 + 0.008 > ev1) $('decision').update('Raise 2x');
+								   else  $('decision').update('Check');
+								}
+								else if (num_cards == 5) {
+								   t.rows[1].style.display = '';
+								   $('percentage').style.display = '';
+								   $('ev1').update('Call EV: ' +  ev1.toFixed(2));
+								   $('ev2').update('Fold EV: ' +  ev2.toFixed(2));
+								   if (ev1 + 0.0053 > ev2) $('decision').update('Call');
+								   else  {
+								     $('decision').update('Fold');
+									 $('cardImages0').src = "images/cards/large/back.gif";
+					                 $('cardImages1').src = "images/cards/large/back.gif";
+								   }
+								}
+								else {
+								   t.rows[1].style.display = 'none';
+								   $('percentage').style.display = 'none';
+								   $('ev1').update('');
+								   $('ev2').update('');
+								   if (ev1 > 0.5) $('decision').update('Raise 4x');
+								   else  $('decision').update('Check');
+								}								
+							}
+						}
+						else {
+						    $('stats').style.display = 'none';
+							$('error').style.display = '';
+							$('error').update(output[0]);
+						}
+					  }
+				  });				
+			}						
+		</script>
+	</head>
+
+	<!-- <body onLoad="_load();"> -->
+	<body style="width: 100%" align="center">
+	    <script type="text/javascript" src="cordova.js"></script>
+		 
+			<script type="text/javascript">
+				var cardIndex;								
+				function onDeckClick(card)
+				{
+                    senderIndex = 0;
+				    for (var i = 0; i< 7; i++) {
+		               if (!isCard(document.calc.cards[i].value)) break;
+					   else senderIndex++;
+				    }
+    	            cardIndex = senderIndex;
+
+                    selectCard(cardIndex,card);
+					return true;
+				}
+			</script>
+		</div>
+<div id="main" style="width: 100%" align="center">
+
+			<br/>
+
+			<br/>
+
+  <div align="center">		
+
+  <TABLE><TR><TD valign="top">
+		<form name="calc" onSubmit="return false" style="margin: 0px; padding: 0px;">
+		<div style="width: 100%; font: 11px Verdana; border: 0px dotted; padding: 0px;">
+        <div align="center">
+
+		 <div style="border-top: solid 0px; margin-left: 0px; margin-right: 0px; margin-bottom: 0px; margin-top: 0px;"></div>
+
+<div id="deck" align="center" nowrap style="font-size: 0px; width: 100%;">
+    <img id="cardSmall2h" class="small_card" src="images/cards/small/2h.gif" height="40" width="40" onclick="onDeckClick('2h')"></img>
+    <img id="cardSmall3h" class="small_card" src="images/cards/small/3h.gif" height="40" width="40" onclick="onDeckClick('3h')"></img>
+    <img id="cardSmall4h" class="small_card" src="images/cards/small/4h.gif" height="40" width="40" onclick="onDeckClick('4h')"></img>
+    <img id="cardSmall5h" class="small_card" src="images/cards/small/5h.gif" height="40" width="40" onclick="onDeckClick('5h')"></img>
+    <img id="cardSmall6h" class="small_card" src="images/cards/small/6h.gif" height="40" width="40" onclick="onDeckClick('6h')"></img>
+    <img id="cardSmall7h" class="small_card" src="images/cards/small/7h.gif" height="40" width="40" onclick="onDeckClick('7h')"></img>
+    <img id="cardSmall8h" class="small_card" src="images/cards/small/8h.gif" height="40" width="40" onclick="onDeckClick('8h')"></img>
+    <img id="cardSmall9h" class="small_card" src="images/cards/small/9h.gif" height="40" width="40" onclick="onDeckClick('9h')"></img>
+    <img id="cardSmallth" class="small_card" src="images/cards/small/th.gif" height="40" width="40" onclick="onDeckClick('th')"></img>
+    <img id="cardSmalljh" class="small_card" src="images/cards/small/jh.gif" height="40" width="40" onclick="onDeckClick('jh')"></img>
+    <img id="cardSmallqh" class="small_card" src="images/cards/small/qh.gif" height="40" width="40" onclick="onDeckClick('qh')"></img>
+    <img id="cardSmallkh" class="small_card" src="images/cards/small/kh.gif" height="40" width="40" onclick="onDeckClick('kh')"></img>
+    <img id="cardSmall1h" class="small_card" src="images/cards/small/1h.gif" height="40" width="40" onclick="onDeckClick('1h')"></img>
+    <br></br>
+    <img id="cardSmall2s" class="small_card" src="images/cards/small/2s.gif" height="40" width="40" onclick="onDeckClick('2s')"></img>
+    <img id="cardSmall3s" class="small_card" src="images/cards/small/3s.gif" height="40" width="40" onclick="onDeckClick('3s')"></img>
+    <img id="cardSmall4s" class="small_card" src="images/cards/small/4s.gif" height="40" width="40" onclick="onDeckClick('4s')"></img>
+    <img id="cardSmall5s" class="small_card" src="images/cards/small/5s.gif" height="40" width="40" onclick="onDeckClick('5s')"></img>
+    <img id="cardSmall6s" class="small_card" src="images/cards/small/6s.gif" height="40" width="40" onclick="onDeckClick('6s')"></img>
+    <img id="cardSmall7s" class="small_card" src="images/cards/small/7s.gif" height="40" width="40" onclick="onDeckClick('7s')"></img>
+    <img id="cardSmall8s" class="small_card" src="images/cards/small/8s.gif" height="40" width="40" onclick="onDeckClick('8s')"></img>
+    <img id="cardSmall9s" class="small_card" src="images/cards/small/9s.gif" height="40" width="40" onclick="onDeckClick('9s')"></img>
+    <img id="cardSmallts" class="small_card" src="images/cards/small/ts.gif" height="40" width="40" onclick="onDeckClick('ts')"></img>
+    <img id="cardSmalljs" class="small_card" src="images/cards/small/js.gif" height="40" width="40" onclick="onDeckClick('js')"></img>
+    <img id="cardSmallqs" class="small_card" src="images/cards/small/qs.gif" height="40" width="40" onclick="onDeckClick('qs')"></img>
+    <img id="cardSmallks" class="small_card" src="images/cards/small/ks.gif" height="40" width="40" onclick="onDeckClick('ks')"></img>
+    <img id="cardSmall1s" class="small_card" src="images/cards/small/1s.gif" height="40" width="40" onclick="onDeckClick('1s')"></img>
+    <br></br>
+    <img id="cardSmall2d" class="small_card" src="images/cards/small/2d.gif" height="40" width="40" onclick="onDeckClick('2d')"></img>
+    <img id="cardSmall3d" class="small_card" src="images/cards/small/3d.gif" height="40" width="40" onclick="onDeckClick('3d')"></img>
+    <img id="cardSmall4d" class="small_card" src="images/cards/small/4d.gif" height="40" width="40" onclick="onDeckClick('4d')"></img>
+    <img id="cardSmall5d" class="small_card" src="images/cards/small/5d.gif" height="40" width="40" onclick="onDeckClick('5d')"></img>
+    <img id="cardSmall6d" class="small_card" src="images/cards/small/6d.gif" height="40" width="40" onclick="onDeckClick('6d')"></img>
+    <img id="cardSmall7d" class="small_card" src="images/cards/small/7d.gif" height="40" width="40" onclick="onDeckClick('7d')"></img>
+    <img id="cardSmall8d" class="small_card" src="images/cards/small/8d.gif" height="40" width="40" onclick="onDeckClick('8d')"></img>
+    <img id="cardSmall9d" class="small_card" src="images/cards/small/9d.gif" height="40" width="40" onclick="onDeckClick('9d')"></img>
+    <img id="cardSmalltd" class="small_card" src="images/cards/small/td.gif" height="40" width="40" onclick="onDeckClick('td')"></img>
+    <img id="cardSmalljd" class="small_card" src="images/cards/small/jd.gif" height="40" width="40" onclick="onDeckClick('jd')"></img>
+    <img id="cardSmallqd" class="small_card" src="images/cards/small/qd.gif" height="40" width="40" onclick="onDeckClick('qd')"></img>
+    <img id="cardSmallkd" class="small_card" src="images/cards/small/kd.gif" height="40" width="40" onclick="onDeckClick('kd')"></img>
+    <img id="cardSmall1d" class="small_card" src="images/cards/small/1d.gif" height="40" width="40" onclick="onDeckClick('1d')"></img>
+<br></br>
+    <img id="cardSmall2c" class="small_card" src="images/cards/small/2c.gif" height="40" width="40" onclick="onDeckClick('2c')"></img>
+    <img id="cardSmall3c" class="small_card" src="images/cards/small/3c.gif" height="40" width="40" onclick="onDeckClick('3c')"></img>
+    <img id="cardSmall4c" class="small_card" src="images/cards/small/4c.gif" height="40" width="40" onclick="onDeckClick('4c')"></img>
+    <img id="cardSmall5c" class="small_card" src="images/cards/small/5c.gif" height="40" width="40" onclick="onDeckClick('5c')"></img>
+    <img id="cardSmall6c" class="small_card" src="images/cards/small/6c.gif" height="40" width="40" onclick="onDeckClick('6c')"></img>
+    <img id="cardSmall7c" class="small_card" src="images/cards/small/7c.gif" height="40" width="40" onclick="onDeckClick('7c')"></img>
+    <img id="cardSmall8c" class="small_card" src="images/cards/small/8c.gif" height="40" width="40" onclick="onDeckClick('8c')"></img>
+    <img id="cardSmall9c" class="small_card" src="images/cards/small/9c.gif" height="40" width="40" onclick="onDeckClick('9c')"></img>
+    <img id="cardSmalltc" class="small_card" src="images/cards/small/tc.gif" height="40" width="40" onclick="onDeckClick('tc')"></img>
+    <img id="cardSmalljc" class="small_card" src="images/cards/small/jc.gif" height="40" width="40" onclick="onDeckClick('jc')"></img>
+    <img id="cardSmallqc" class="small_card" src="images/cards/small/qc.gif" height="40" width="40" onclick="onDeckClick('qc')"></img>
+    <img id="cardSmallkc" class="small_card" src="images/cards/small/kc.gif" height="40" width="40" onclick="onDeckClick('kc')"></img>
+    <img id="cardSmall1c" class="small_card" src="images/cards/small/1c.gif" height="40" width="40" onclick="onDeckClick('1c')"></img>
+</div>
+	 
+        <div style="border-top: solid 0px; margin-left: 0px; margin-right: 0px; margin-bottom: 0px; margin-top: 0px; width: 100%;"></div>
+		<div style="text-align: center;">
+		<table align="center" style="text-align: center; width: 100%;">	
+		   <tr><td></td></tr>
+		   <tr>
+		      <td colspan="2"><font size="1"><strong>Player Cards</strong></font></td>
+		      <!-- <td rowspan="3">&nbsp;&nbsp;&nbsp;&nbsp;</td>-->
+              <td colspan="5"><font size="1"><strong>Community Cards</strong></font></td>
+		   </tr>
+		   <tr>
+		       <td><a href="javascript:void(0)" onClick="selectCard(0, undefined)" ><img id="cardImages0" class="large_card" src="images/cards/large/back.gif"></a></td>
+		       <td><a href="javascript:void(0)" onClick="selectCard(1, undefined)" ><img id="cardImages1" class="large_card" src="images/cards/large/back.gif"></a></td>
+		       <td><a href="javascript:void(0)" onClick="selectCard(2, undefined)" ><img id="cardImages2" class="large_card" src="images/cards/large/back.gif"></a></td>
+		       <td><a href="javascript:void(0)" onClick="selectCard(3, undefined)" ><img id="cardImages3" class="large_card" src="images/cards/large/back.gif"></a></td>
+	           <td><a href="javascript:void(0)" onClick="selectCard(4, undefined)" ><img id="cardImages4" class="large_card" src="images/cards/large/back.gif"></a></td>
+               <td><a href="javascript:void(0)" onClick="selectCard(5, undefined)" ><img id="cardImages5" class="large_card" src="images/cards/large/back.gif"></a></td>
+	           <td><a href="javascript:void(0)" onClick="selectCard(6, undefined)" ><img id="cardImages6" class="large_card" src="images/cards/large/back.gif"></a></td>
+            </tr>
+            <tr>
+               <td><input type="text" name="cards" onChange="return selectCard(0, this.value)" size="1"></td>
+               <td><input type="text" name="cards" onChange="return selectCard(1, this.value)" size="1"></td>
+               <td><input type="text" name="cards" onChange="return selectCard(2, this.value)" size="1"></td>
+               <td><input type="text" name="cards" onChange="return selectCard(3, this.value)" size="1"></td>
+               <td><input type="text" name="cards" onChange="return selectCard(4, this.value)" size="1"></td>
+               <td><input type="text" name="cards" onChange="return selectCard(5, this.value)" size="1"></td>
+               <td><input type="text" name="cards" onChange="return selectCard(6, this.value)" size="1"></td>
+            </tr>
+         </table>	
+		 <br/>
+		 <div style="text-align: left; margin-left: 0px;">
+		 	<table align="center" style="text-align: center; width: 100%;">
+			 <tr>
+			 	<td><input type="radio" id="handoptimization" name="optimization" value="hand" checked><label for="handoptimization" style="font-size: 10px"><b>Largest Gain Per Hand </b></label><br/></td>
+				<td><input type="radio" id="wageroptimization" name="optimization" value="wager"><label for="wageroptimization" style="font-size: 10px"><b>Largest Gain Per Unit Wagered </b></label></br></td>
+			 </tr>
+			</table>
+         </div>
+         <span id="payout_display">
+			</span>
+      <div style="border-top: solid 0px; margin: 0px;"></div>
+      <div align="center">
+	  	 <br/>
+	     <button style="font-size: 40px;" onclick="_clear(); return false;">Clear</button>&nbsp;&nbsp
+	     <button style="font-size: 40px;" onclick="_submit(); return false;">Calculate</button>		 
+	  </div>
+	  <br/>		 		 
+      <div id="result" style="display: none; font-size: 10px; font-family: Verdana;">
+	    <div style="border-top: solid 0px; margin: 00px;"></div>
+        <div style="background: #222; padding: 0px; text-align: left;">
+          <div align="center" >
+            <p style="text-align: center" id="error"></p>
+            <div id="stats">
+              <br/>
+              <b><u id="decision" style="font-size: 70px ; color: red; font-weight: bold;"></u></b></br><br>
+		      <div id="percentage">
+		        <b><span id="ev1"></span></b><br/>
+                <b><span id="ev2"></span></b><BR><BR>
+		      </div>
+	          <TABLE align="center" id="ttab" CELLPADDING=0 style="font-size: 10px; font-family: Verdana;">
+	            <TR><TD nowrap align="right"><strong>Player Cards: </strong>&nbsp;</TD><TD><B><span id="handp"></span></TD></TR>
+	            <TR><TD nowrap align="right"><strong>Community Cards: </strong>&nbsp;</TD><TD><B><span id="handc"></span></TD></TR>
+	          </TABLE>			  
+            </div>
+          </div>
+	    </div>
+	  </div>		 
+		 
+       </div>
+	  </div>
+	  </div>
+      </form>
+</TD></TR></TABLE>
+</div>
+		</div>
+	</body>
+</html>

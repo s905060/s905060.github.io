@@ -1,0 +1,118 @@
+p {margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0;}
+	
+#header
+{
+	text-align: center;	
+}
+
+#header #header_img
+{
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+}
+
+#header #navbar
+{
+	background: url('../images/navbar_left.gif') no-repeat top left; 
+	padding-left: 25px;
+}
+
+#header #navbar #menucontainer
+{
+	height: 23px;
+	background: url('../images/navbar_right.gif') no-repeat top right; 
+	padding-right: 25px;
+}
+
+#header #navbar #menucontainer #menu
+{
+	padding-top: 3px;
+	text-align: center; 
+	background: url('../images/navbar_bg.gif') repeat-x top left;
+	height: 23px;
+}
+#header #navbar #menucontainer #menu a:link     { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+#header #navbar #menucontainer #menu a:hover  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+#header #navbar #menucontainer #menu a:active  { color: #9c0; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+#header #navbar #menucontainer #menu a:visited  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+
+.nav a:link     { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+.nav a:hover  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+.nav a:active  { color: #9c0; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+.nav a:visited  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+
+
+#header #navbar #menucontainer #menu a
+{
+	color: white;
+}
+
+#header #navbar #menucontainer #menu a:HOVER
+{
+	text-decoration: none;
+}
+
+#navbar2
+{
+	text-align: center;
+	padding-bottom: 3px;
+	background: #202020;
+	border: 1px solid black;
+}
+
+#navbar2 a:link     { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+#navbar2 a:hover  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+#navbar2 a:active  { color: #9c0; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+#navbar2 a:visited  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+
+.nav a:link     { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+.nav a:hover  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+.nav a:active  { color: #9c0; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+.nav a:visited  { color: #ffffff; font-weight: bold; font-size: 10pt; font-family: Arial, Verdana, Helvetica, sans-serif; text-decoration: none; word-spacing: 2px; letter-spacing: 1px }
+
+#main
+{
+	text-align: center;
+	margin-left: 5%;
+	margin-right: 5%; 
+}
+.menubtm
+{
+	height: 11px;
+	background:  url('../images/navbarbtm_bg.gif') repeat-x top left;
+}
+
+.menubtm_left
+{
+	height: 11px;
+	background: url('../images/navbarbtm_left.gif') no-repeat top left; 
+	padding-left: 25px;
+}
+
+.menubtm_right
+{
+	height: 11px;
+	background:  url('../images/navbarbtm_right.gif') no-repeat top right; 
+	padding-right: 25px;
+}
+
+#dropmenudiv{
+text-align: left;
+position:absolute;
+border:1px solid #99cc00;
+border-bottom-width: 0;
+font:normal 11px Verdana;
+line-height:18px;
+z-index:100;
+}
+
+#dropmenudiv a { color: #ffffff; font-weight: normal; font-size: 11px; font-family: Verdana, Helvetica, sans-serif; text-decoration: none; background-color: #000000; text-indent: 3px; padding: 1px 0; border-right: 1px solid #99cc00; border-bottom: 1px solid #99cc00; border-left: 1px solid #99cc00; width: 100%; display: block }
+
+#dropmenudiv a:hover { color: #000000; background-color: #FFFFFF }
+
+body
+{
+	margin-bottom: 25px;
+	text-align: center;
+}

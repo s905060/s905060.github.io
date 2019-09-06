@@ -1,0 +1,36 @@
+body   { background: #101010 repeat-x; margin: 0px; color: white; text-align: center; }
+
+p     { color: white; font-size: 12px; font-family: Verdana, Helvetica, Tahoma, Arial, sans-serif; text-align: justify; letter-spacing: 1px; padding-right: 22pt; padding-left: 22pt }
+
+h1  { color: white; font-weight: bold; font-size: 12pt; font-family: Verdana, Helvetica, Tahoma, Arial, sans-serif; text-transform: capitalize }
+
+a:link  { color: #88c; font-weight: bold; text-decoration: none }
+a:hover  { color: #88c; font-weight: bold; text-decoration: underline }
+a:active  { color: #88c; font-weight: bold; text-decoration: none }
+a:visited  { color: #88c; font-weight: bold; text-decoration: none }
+
+.sortable a { color: #88f;  text-decoration: underline; font-weight: normal; }
+.sortable a:link  { color: #88f;  text-decoration: underline; font-weight: normal; }
+.sortable a:hover  { color: #88f; text-decoration: underline; font-weight: normal; }
+.sortable a:active  { color: #88f; text-decoration: underline; font-weight: normal; }
+.sortable a:visited  { color: #88f; text-decoration: underline; font-weight: normal; }
+
+.sortable strong a { font-weight: bold; }
+.sortable strong a:link { font-weight: bold; }
+.sortable strong a:visited { font-weight: bold; }
+.sortable strong a:hover { font-weight: bold; }
+
+.sortable a strong { font-weight: bold; }
+.sortable a:link strong { font-weight: bold; }
+.sortable a:visited strong { font-weight: bold; }
+.sortable a:hover strong { font-weight: bold; }
+
+.sortable b a { font-weight: bold; }
+.sortable b a:link { font-weight: bold; }
+.sortable b a:visited { font-weight: bold; }
+.sortable b a:hover { font-weight: bold; }
+
+.norm a:link  { color: #88c; font-weight: bold; text-decoration: none }
+.norm a:hover  { color: #88c; font-weight: bold; text-decoration: underline }
+.norm a:active  { color: #88c; font-weight: bold; text-decoration: none }
+.norm a:visited  { color: #88c; font-weight: bold; text-decoration: none }
