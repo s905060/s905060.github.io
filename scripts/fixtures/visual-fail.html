@@ -7,6 +7,8 @@
   <style>
     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
     #motion { animation: fade 0.3s; }
+    #hidden p { opacity: 0; }
+    button { box-shadow: 0 1px 2px #0003; outline: none; }
   </style>
 </head>
 <body>
@@ -17,6 +19,11 @@
   <section id="motion">
     <h2>Motion</h2>
     <p>Animates without a reduced-motion guard.</p>
+  </section>
+  <section id="hidden">
+    <h2>Hidden</h2>
+    <p>Never revealed, even with reduced motion.</p>
+    <button type="button">Shadow but no focus ring</button>
   </section>
 </body>
 </html>

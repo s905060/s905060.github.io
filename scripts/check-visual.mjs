@@ -81,6 +81,11 @@ const AUDIT = `(async (reduced) => {
     const name = label(s);
     if (reduced) {
       if (window.__motion.has(s)) failures.push(name + ': animates even when prefers-reduced-motion is reduce');
+      const hidden = [s, ...s.querySelectorAll('*')].some((el) => {
+        const css = getComputedStyle(el);
+        return css.opacity === '0' || css.visibility === 'hidden';
+      });
+      if (hidden) failures.push(name + ': content stays hidden when prefers-reduced-motion is reduce');
       continue;
     }
     if (!window.__motion.has(s)) failures.push(name + ': no entrance animation or transition when scrolled into view');
@@ -98,9 +103,10 @@ const AUDIT = `(async (reduced) => {
       failures.push(name + ': not reachable by keyboard');
       continue;
     }
+    const restingShadow = getComputedStyle(el).boxShadow;
     el.focus({ focusVisible: true });
     const css = getComputedStyle(el);
-    const ring = (css.outlineStyle !== 'none' && parseFloat(css.outlineWidth) > 0) || css.boxShadow !== 'none';
+    const ring = (css.outlineStyle !== 'none' && parseFloat(css.outlineWidth) > 0) || css.boxShadow !== restingShadow;
     if (document.activeElement !== el || !ring) failures.push(name + ': no visible focus indicator');
     el.blur();
   }
