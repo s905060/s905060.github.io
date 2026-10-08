@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cheng-Hsiu (Jash) Lee | Career at a Glance</title>
+<meta name="description" content="Interactive career overview of Cheng-Hsiu (Jash) Lee, AI engineering leader at Microsoft AI.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!--
+  Composition: Big Object. The career is drawn as a data-pipeline map read left
+  to right. Each colored line is a capability, joining the bundle at the role
+  where the résumé first shows it. Stations are roles. Every line flows into
+  the terminal node: executive decisions, which is what the current role
+  produces. Particles are events moving through the pipeline.
+-->
+<style>
+  :root {
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --bg: #F3F3F1; --ink: #161616; --ink2: #55575A; --ink3: #8E9093;
+    --rule: rgba(22,22,22,.14); --dots: rgba(22,22,22,.16); --btn: rgba(255,255,255,.72);
+    --station: #FFFFFF;
+    --l-code: #8E9093; --l-infra: #6B8B3B; --l-auto: #D99A1E; --l-data: #4A7DC0;
+    --l-k8s: #2E9A8C; --l-llm: #D9467A; --l-ml: #E2793C; --l-gpu: #1F4E91;
+    --bar: #A9B9C9; --barHi: #1F4E91; --grainOp: .05;
+  }
+  :root[data-theme="dark"] {
+    --bg: #141516; --ink: #EDEDED; --ink2: #B4B6B9; --ink3: #7D8084;
+    --rule: rgba(237,237,237,.14); --dots: rgba(237,237,237,.12); --btn: rgba(30,32,34,.72);
+    --station: #1E2022;
+    --l-code: #8C8F93; --l-infra: #8DB05F; --l-auto: #F2B93B; --l-data: #6E9BDA;
+    --l-k8s: #4DB8AA; --l-llm: #F0709C; --l-ml: #F0935C; --l-gpu: #8CB8F0;
+    --bar: #3F5268; --barHi: #8CB8F0; --grainOp: .03;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--sans); overflow: hidden; transition: background .4s, color .4s; }
+  button { font: inherit; color: inherit; }
+  a { color: inherit; }
+  :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+
+  /* stage */
+  .stage { position: fixed; inset: 0; }
+  .stage svg { width: 100%; height: 100%; display: block; }
+  #world { transition: transform 1.1s cubic-bezier(.65,0,.25,1); transform-origin: 0 0; }
+  .fade { position: fixed; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(0deg, var(--bg) 0, var(--bg) 70px, transparent 150px),
+      linear-gradient(90deg, var(--bg) 0, var(--bg) 26%, color-mix(in srgb, var(--bg) 70%, transparent) 36%, transparent 46%); }
+  .grain { position: fixed; inset: 0; pointer-events: none; opacity: var(--grainOp); mix-blend-mode: multiply; }
+
+  .line { transition: opacity .6s; }
+  .line path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .line .halo { stroke: var(--bg); stroke-width: 14; transition: stroke .4s; }
+  .line .core { stroke-width: 9; }
+  .line circle { fill: var(--bg); stroke-width: 1.5; }
+  .line.future { opacity: .12; }
+  .line.past { opacity: .55; }
+  .station rect { fill: var(--station); stroke: var(--ink); stroke-width: 1.6; transition: fill .4s; }
+  .station { cursor: pointer; }
+  .station:hover rect, .station.on rect { fill: var(--ink); }
+  .terminal .ring { fill: var(--station); stroke: var(--ink); stroke-width: 1.6; }
+  .terminal .pulse { fill: none; stroke: var(--ink); stroke-width: 1; opacity: 0; }
+  .terminal .core { fill: var(--ink); }
+  .k { font-family: var(--mono); fill: var(--ink3); transition: fill .4s, opacity .4s; }
+  .k.strong { fill: var(--ink); font-weight: 500; }
+  .k.ln { fill: var(--ink2); }
+  .leader { stroke: var(--ink3); stroke-width: .8; transition: opacity .4s; }
+  .hide-stations .st-label { opacity: 0; }
+  .dimmed .st-label:not(.strong) { opacity: .35; }
+
+  /* chrome */
+  .brand { position: fixed; top: 40px; left: 54px; font-size: 14px; display: flex; gap: 12px; align-items: center; z-index: 3; }
+  .brand b { font-weight: 600; }
+  .brand span { color: var(--ink2); padding-left: 12px; border-left: 1px solid var(--rule); }
+  .tools { position: fixed; top: 32px; right: 40px; display: flex; gap: 8px; z-index: 3; }
+  .tools button, .tools a {
+    font-size: 12px; padding: 7px 12px; background: var(--btn); border: 1px solid var(--rule);
+    cursor: pointer; text-decoration: none; backdrop-filter: blur(6px); line-height: 1.4;
+  }
+  .tools button:hover, .tools a:hover { border-color: var(--ink3); }
+  .tools button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* chapter panel */
+  .panel { position: fixed; left: 54px; top: 104px; bottom: 110px; width: 430px; overflow-y: auto; z-index: 2; scrollbar-width: thin; padding-right: 8px; }
+  article { animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+  article[hidden] { display: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .kicker { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink2); }
+  .idx { font: 500 11px var(--mono); background: var(--ink); color: var(--bg); padding: 2px 7px; }
+  h1, h2 { font-weight: 300; letter-spacing: -.01em; line-height: 1.12; margin: 18px 0 18px; }
+  h1 { font-size: 64px; }
+  h2 { font-size: 44px; }
+  .role-meta { font: 400 12px var(--mono); color: var(--ink3); margin: -8px 0 14px; }
+  .lead { font-size: 15px; color: var(--ink); line-height: 1.75; }
+  .figs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; border-top: 1.5px solid var(--ink); margin-top: 22px; padding-top: 14px; }
+  .fig .n { font-weight: 300; font-size: 38px; line-height: 1.1; white-space: nowrap; }
+  .fig .n small { font-size: 13px; margin-left: 2px; }
+  .fig .l { font-size: 11.5px; color: var(--ink2); line-height: 1.45; margin-top: 4px; }
+  .cmp { margin-top: 18px; }
+  .cmp-title, .chips-title { font: 500 11px var(--mono); color: var(--ink3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+  .cmp-row { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 10px; font-size: 12px; color: var(--ink2); margin-bottom: 5px; }
+  .cmp-row .rail { position: relative; height: 16px; }
+  .cmp-row .fill { position: absolute; left: 0; top: 2px; height: 12px; background: var(--bar); width: 0; transition: width .9s cubic-bezier(.2,.7,.2,1) .3s; }
+  .cmp-row.hi .fill { background: var(--barHi); }
+  .cmp-row .val { position: absolute; top: -1px; font: 400 12px var(--mono); color: var(--ink); white-space: nowrap; padding-left: 8px; transition: left .9s cubic-bezier(.2,.7,.2,1) .3s; }
+  .chips { margin-top: 18px; }
+  .chip { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink2); padding: 3px 0; }
+  .chip i { width: 22px; height: 5px; border-radius: 3px; flex: none; }
+  .points { list-style: none; margin-top: 20px; }
+  .points li { padding: 10px 0; border-top: 1px solid var(--rule); font-size: 13.5px; color: var(--ink2); line-height: 1.6; }
+  .points li b { display: block; color: var(--ink); font-weight: 600; font-size: 14px; }
+  .hint { margin-top: 22px; font-size: 12px; color: var(--ink3); }
+
+  /* chapter nav */
+  .chapters { position: fixed; left: 54px; right: 140px; bottom: 34px; display: flex; gap: 4px; z-index: 3; overflow-x: auto; scrollbar-width: none; }
+  .chapters button { flex: 1 0 auto; text-align: left; background: none; border: 0; border-top: 1.5px solid var(--rule); padding: 10px 14px 0 0; font: 400 11px var(--mono); color: var(--ink3); cursor: pointer; white-space: nowrap; transition: color .3s, border-color .3s; }
+  .chapters button:hover { color: var(--ink2); }
+  .chapters button[aria-current="step"] { color: var(--ink); border-top-color: var(--ink); }
+  .arrows { position: fixed; right: 40px; bottom: 28px; display: flex; gap: 6px; z-index: 3; }
+  .arrows button { width: 40px; height: 34px; background: none; border: 0; font-size: 20px; cursor: pointer; color: var(--ink2); }
+  .arrows button:hover { color: var(--ink); }
+  .mapnote { position: fixed; right: 54px; bottom: 100px; z-index: 1; font: 400 11px var(--mono); color: var(--ink3); text-align: right; line-height: 1.6; }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .stage { position: relative; height: 46vh; }
+    .fade { display: none; }
+    .brand { position: absolute; top: 16px; left: 20px; }
+    .brand span { display: none; }
+    .tools { position: absolute; top: 10px; right: 12px; }
+    .tools .opt { display: none; }
+    .panel { position: static; width: auto; padding: 8px 20px 120px; overflow: visible; }
+    h1 { font-size: 46px; } h2 { font-size: 34px; }
+    .fig .n { font-size: 28px; }
+    .chapters { position: fixed; left: 0; right: 92px; bottom: 0; padding: 0 12px 14px; background: var(--bg); }
+    .arrows { right: 8px; bottom: 6px; }
+    .mapnote { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #world, article, .cmp-row .fill, .cmp-row .val { transition: none; animation: none; }
+  }
+  @media print {
+    body { overflow: visible; background: #fff; }
+    .stage, .fade, .grain, .tools, .chapters, .arrows, .mapnote { display: none; }
+    .panel { position: static; width: auto; overflow: visible; padding: 0 40px; }
+    article[hidden] { display: block; }
+    article { break-inside: avoid; margin-bottom: 28px; animation: none; }
+    h1 { font-size: 40px; } h2 { font-size: 26px; margin: 8px 0; }
+    .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" aria-hidden="true">
+  <svg id="svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+        <circle cx="12" cy="12" r="1" fill="var(--dots)"/>
+      </pattern>
+    </defs>
+    <g id="world">
+      <rect x="-1600" y="-1000" width="4800" height="3000" fill="url(#dots)"/>
+    </g>
+  </svg>
+</div>
+<div class="fade"></div>
+<svg class="grain" aria-hidden="true" width="100%" height="100%">
+  <filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#g)"/>
+</svg>
+
+<div class="brand"><b>Cheng-Hsiu (Jash) Lee</b><span>Career at a glance</span></div>
+<div class="tools">
+  <button type="button" id="play" aria-pressed="false">Autoplay</button>
+  <button type="button" id="theme" class="opt">Light / Dark</button>
+  <button type="button" id="full" class="opt">Full screen</button>
+  <a href="index.html">Résumé</a>
+</div>
+
+<main class="panel" id="panel" aria-live="polite"></main>
+
+<nav class="chapters" id="chapters" aria-label="Chapters"></nav>
+<div class="arrows">
+  <button type="button" id="prev" aria-label="Previous chapter">←</button>
+  <button type="button" id="next" aria-label="Next chapter">→</button>
+</div>
+<div class="mapnote" aria-hidden="true">Line = capability · station = role<br>Stations in career order, not to time scale</div>
+
+<script>
+(function () {
+  // ---------- content (all facts from the résumé) ----------
+  var ROLES = [
+    { id: 'early', label: 'EARLIER\n2002–15' },
+    { id: 'apx',   label: 'APPNEXUS\n2015' },
+    { id: 'xmgr',  label: 'XANDR\n2019' },
+    { id: 'xsr',   label: 'XANDR SR\n2021' },
+    { id: 'ads',   label: 'MSFT ADS\n2022' },
+    { id: 'msai',  label: 'MSFT AI\n2023' },
+    { id: 'cop',   label: 'COPILOT\n2025' },
+    { id: 'si',    label: 'SUPERINTEL.\n2026–NOW' }
+  ];
+  // Lane 0 is the top. Each line joins at the role where the résumé first shows it;
+  // lvl stacks tributary labels so they never collide.
+  var LINES = [
+    { id: 'gpu',   name: 'GPU / HPC telemetry',          at: 'si',    lane: 0, lvl: 0 },
+    { id: 'llm',   name: 'LLM agents · Claude Code, MCP', at: 'cop',  lane: 1, lvl: 3, dx: 22 },
+    { id: 'ml',    name: 'ML platforms · Databricks, Ray', at: 'cop', lane: 2, lvl: 1 },
+    { id: 'k8s',   name: 'Hybrid cloud · Kubernetes',    at: 'ads',   lane: 3, lvl: 0 },
+    { id: 'data',  name: 'Big data · Spark, Hadoop',     at: 'apx',   lane: 4, lvl: 1 },
+    { id: 'auto',  name: 'Automation · Terraform, CI/CD', at: 'early', lane: 5 },
+    { id: 'infra', name: 'Infrastructure · virtualization', at: 'early', lane: 6 },
+    { id: 'code',  name: 'Code · Python, PHP → Go',      at: 'early', lane: 7 }
+  ];
+
+  var CH = [
+    { nav: 'Cover', focus: null, stations: false,
+      kicker: 'New York, NY', h1: 'Cheng-Hsiu<br>(Jash) Lee',
+      lead: 'AI engineering leader with 20+ years building data and AI platforms and the teams that run them. Now at Microsoft AI, turning GPU fleet telemetry into decisions for executive leadership.',
+      figs: [['20+', 'yrs', 'building data &amp; AI infrastructure'], ['500M+', '', 'users served by platforms I owned'], ['$3M+', '', 'annual savings delivered']],
+      hint: 'Press → or space to begin · F for full screen · click any station to jump to that role.' },
+    { nav: 'The map', focus: null,
+      kicker: '2002 – present', h2: 'One career,<br>one growing stack',
+      lead: 'Read the map left to right. Each colored line is a capability, joining at the role where I first owned it. Stations are roles. Every line flows into the work I do now: decisions for executive leadership.',
+      figs: [['8', '', 'capabilities on the map'], ['8', '', 'roles, 3 companies since 2015'], ['20+', '', 'engineers led across US &amp; APAC']],
+      allLines: true },
+    { nav: 'Superintelligence', focus: 'si',
+      kicker: 'Microsoft AI · Superintelligence', h2: 'GPU fleet analytics for executive decisions',
+      meta: 'Member of Technical Staff · Mar 2026 – present',
+      lead: 'Lead a team building internal tools and analytics products that help the Microsoft AI CEO and executive leadership make critical business decisions.',
+      figs: [['GPU/HPC', '', 'supercomputing fleet telemetry'], ['3', '', 'core metrics standardized: MFU, goodput, capacity readiness'], ['CEO', '', 'and exec leadership as primary audience']],
+      points: [['Telemetry to decisions', 'Pipelines from GPU clusters, schedulers and capacity trackers into the data warehouse.'], ['Self-service visibility', 'Dashboards and APIs for Infra, Research, Strategy and Executives.']] },
+    { nav: 'Copilot', focus: 'cop',
+      kicker: 'Microsoft AI · Copilot', h2: 'Data platform for 500M+ users',
+      meta: 'Member of Technical Staff · Mar 2025 – Mar 2026',
+      lead: 'Owned technical strategy for the Big Data / AI / ML platforms behind Copilot, processing billions of events per day.',
+      figs: [['500M+', '', 'users served'], ['99.99', '%', 'SLA maintained'], ['10', '×', 'productivity from agentic workflows']],
+      points: [['0 → 1 → 100', 'Built the squad and scaled it across SRE, Infrastructure, DevOps, GenAI, Data Labeling and Post Training.']] },
+    { nav: 'Microsoft AI', focus: 'msai',
+      kicker: 'Microsoft AI', h2: '6× infrastructure growth at 99.99% SLA',
+      meta: 'Principal Software Engineering Manager · Jan 2023 – Mar 2025',
+      lead: 'Led 20+ engineers across the US and APAC and aligned the technical roadmap with business objectives while daily data volume grew sixfold.',
+      figs: [['6', '×', 'daily ingest growth'], ['$2M+', '', 'annual savings'], ['20+', '', 'engineers, US &amp; APAC']],
+      cmp: { title: 'Daily ingest', rows: [['Before', 50, '50 TB'], ['After', 300, '300+ TB']] },
+      points: [['Savings', 'Strategic automation and vendor optimization.']] },
+    { nav: 'Microsoft Ads', focus: 'ads',
+      kicker: 'Microsoft Ads', h2: 'Hybrid-cloud move: lower cost, triple scale',
+      meta: 'Sr. Manager, Technology · Jun 2022 – Jan 2023',
+      lead: 'Orchestrated a hybrid-cloud transformation with Terraform and Kubernetes, and directed distributed teams providing 24/7 service delivery.',
+      figs: [['−45', '%', 'infrastructure cost'], ['3', '×', 'scalability'], ['10B+', '', 'ad requests per day']] },
+    { nav: 'Xandr · Sr Mgr', focus: 'xsr',
+      kicker: 'Xandr', h2: 'Scaling to 1M+ queries per second',
+      meta: 'Sr. Manager, Technical Operations (Big Data) · Dec 2021 – Jun 2022',
+      lead: 'Drove infrastructure scaling and established an incident-response framework with strong SRE practices.',
+      figs: [['1M+', '', 'queries per second'], ['99.95', '%', 'uptime'], ['$1M+', '', 'savings delivered']],
+      points: [['Reliability', '99.9% SLA compliance through the new incident-response framework.']] },
+    { nav: 'Xandr · Mgr', focus: 'xmgr',
+      kicker: 'Xandr', h2: 'Built the team, cut deploys to minutes',
+      meta: 'Manager, Technical Operations (Big Data) · Apr 2019 – Dec 2021',
+      lead: 'Grew the team from 3 to 10 engineers and rebuilt the deployment process with CI/CD automation.',
+      figs: [['3→10', '', 'engineers on the team'], ['−80', '%', 'mean time to recovery'], ['15+', '', 'engineers mentored']],
+      cmp: { title: 'Deployment time', rows: [['Before', 240, '4 hours'], ['After', 15, '15 min']] } },
+    { nav: 'AppNexus', focus: 'apx',
+      kicker: 'AppNexus', h2: '50B+ requests a day, under 10 ms',
+      meta: 'Senior Systems Engineer (Big Data) · Dec 2015 – Apr 2019',
+      lead: 'Owned the distributed compute platform (Spark, Hadoop) behind the ad exchange.',
+      figs: [['50B+', '', 'requests per day'], ['&lt;10', 'ms', 'latency'], ['50+', '', 'hiring interviews led']],
+      points: [['Mentorship', 'Mentored 8 engineers and set engineering best practices.']] },
+    { nav: 'Earlier', focus: 'early',
+      kicker: '2002 – 2015', h2: 'The foundation',
+      lead: 'Thirteen years across reliability engineering, MIS and research infrastructure, plus military service.',
+      figs: [['13', 'yrs', 'before AppNexus'], ['$500K+', '', 'saved at Nielsen (LVS)'], ['7', '', 'data centers run at eXelate']],
+      points: [['Nielsen · SRE · 2015', 'Terraform deployments (95% less manual effort); Python → Go migration (60% faster).'], ['NYU · 2013–2015', 'Private cloud, NSF-funded Vlab virtual-lab platform, unikernel research.'], ['CEM Co. · 2002–2012', 'Senior MIS engineer: web systems and virtualization. R.O.C. Army second lieutenant, 2010–2011.']] },
+    { nav: 'Skills', focus: null, stations: false,
+      kicker: 'Toolbox', h2: 'Core skills',
+      points: [['AI / LLMs', 'GPT-5, Claude, LLaMA, RAG, fine-tuning, LoRA, MCP, agentic workflows, Stable Diffusion'], ['Big data', 'Spark, Databricks, Kafka, Flink, Airflow, Dagster, Ray, Iceberg, Presto, Hive'], ['Platform', 'Azure, AWS, Kubernetes, Docker, Helm, Terraform, Bicep, Ansible'], ['Data stores', 'PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch, Cassandra, HBase'], ['Delivery &amp; code', 'GitHub Actions, Azure DevOps, Jenkins, Spinnaker · Python, Go, TypeScript, Bash']] },
+    { nav: 'Contact', focus: null, stations: false,
+      kicker: 'Get in touch', h2: 'Let’s talk',
+      points: [['Email', '<a href="mailto:s905060@gmail.com">s905060@gmail.com</a> · 917-971-9551 · New York, NY'], ['Elsewhere', '<a href="https://www.linkedin.com/in/jash-lee-8b174264/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/s905060" target="_blank" rel="noopener">GitHub</a> · <a href="https://s905060.gitbooks.io/site-reliability-engineer-handbook" target="_blank" rel="noopener">SRE Handbook</a> · <a href="index.html">Full résumé</a>'], ['Education', 'M.S., Computer Science, New York University'], ['Side project', 'Founder, Scientific Gambling App (2024–present): an AI-powered decision-making app on <a href="https://www.amazon.com/gp/product/B0DRM5W3SB" target="_blank" rel="noopener">Amazon</a> and <a href="https://play.google.com/store/apps/details?id=com.s905060.ScientificGambling" target="_blank" rel="noopener">Google Play</a>.']] }
+  ];
+
+  // ---------- map geometry ----------
+  // Stations are evenly spaced in career order (not to time scale) so every role gets room.
+  var NS = 'http://www.w3.org/2000/svg';
+  var CY = 0, LANE = 26, G = 118, XT = 7 * G + 170;
+  function mon(ym) { var p = ym.split('-'); return +p[0] * 12 + (+p[1] - 1); }
+  function laneY(l) { return CY + (l - 3.5) * LANE; }
+  function el(tag, attrs, parent) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; }
+  var roleById = {};
+  ROLES.forEach(function (r, i) { r.i = i; r.x = i * G; roleById[r.id] = r; });
+
+  var world = document.getElementById('world');
+  var gLines = el('g', {}, world);
+  var gStations = el('g', {}, world);
+  var gLabels = el('g', {}, world);
+  var scaled = [];   // text kept at a constant on-screen size: [node, px]
+  function text(parent, x, y, str, cls, px, anchor) {
+    var t = el('text', { x: x, y: y, 'class': 'k ' + (cls || ''), 'text-anchor': anchor || 'start' }, parent);
+    var parts = str.split('\n');
+    parts.forEach(function (s, j) {
+      var sp = el('tspan', { x: x, dy: j ? '1.35em' : 0 }, t); sp.textContent = s;
+    });
+    scaled.push([t, px || 11]); return t;
+  }
+
+  // Lines: founding lines start at the left; later ones drop in from above as tributaries.
+  // Newer lines take higher lanes, so a tributary never crosses an existing line.
+  var D = 26;
+  LINES.forEach(function (L) {
+    var y = laneY(L.lane), r = roleById[L.at], xs = r.x + (L.dx || 0), d;
+    if (L.at === 'early') {
+      d = 'M-70 ' + y + ' H' + (6 * G + 60);
+      L.labelPos = null; // founding lines are named in the side panel
+    } else {
+      var top = laneY(0) - 46 - L.lvl * 44;
+      d = 'M' + (xs - D) + ' ' + top + ' V' + (y - D) + ' L' + xs + ' ' + y + ' H' + (6 * G + 60);
+      L.labelPos = [xs - D - 4, top - 10, 'start'];
+    }
+    d += ' C' + (7 * G + 80) + ' ' + y + ' ' + (XT - 70) + ' ' + CY + ' ' + (XT - 30) + ' ' + CY;
+    var g = el('g', { 'class': 'line', 'data-id': L.id }, gLines);
+    el('path', { 'class': 'halo', d: d }, g);
+    L.path = el('path', { 'class': 'core', d: d, stroke: 'var(--l-' + L.id + ')' }, g);
+    var s0 = L.path.getPointAtLength(0);
+    el('circle', { cx: s0.x, cy: s0.y, r: 4.5, stroke: 'var(--l-' + L.id + ')' }, g);
+    L.g = g;
+    L.len = L.path.getTotalLength();
+    L.label = L.labelPos ? text(gLabels, L.labelPos[0], L.labelPos[1], L.name, 'ln', 11, L.labelPos[2]) : el('g', {}, gLabels);
+  });
+
+  // Stations: a capsule across the lines that exist at that role; labels in one row below.
+  ROLES.forEach(function (r) {
+    var lanes = LINES.filter(function (L) { return roleById[L.at].i <= r.i; }).map(function (L) { return L.lane; });
+    var y1 = laneY(Math.min.apply(null, lanes)) - 9, y2 = laneY(Math.max.apply(null, lanes)) + 9;
+    var g = el('g', { 'class': 'station', 'data-id': r.id }, gStations);
+    el('rect', { x: r.x - 7, y: y1, width: 14, height: y2 - y1, rx: 7 }, g);
+    r.node = g;
+    r.leader = el('line', { 'class': 'leader st-label', x1: r.x, y1: y2, x2: r.x, y2: laneY(7) + 44 }, gLabels);
+    r.label = text(gLabels, r.x, laneY(7) + 62, r.label, 'st-label', 11, 'middle');
+  });
+
+  // Terminal: executive decisions
+  var term = el('g', { 'class': 'terminal' }, gStations);
+  var pulse = el('circle', { 'class': 'pulse', cx: XT, cy: CY, r: 28 }, term);
+  el('circle', { 'class': 'ring', cx: XT, cy: CY, r: 28 }, term);
+  el('circle', { 'class': 'core', cx: XT, cy: CY, r: 10 }, term);
+  text(gLabels, XT, CY + 62, 'EXECUTIVE\nDECISIONS', 'strong', 11, 'middle');
+
+  // Particles: events moving through each line toward the terminal
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var parts = [];
+  LINES.forEach(function (L, i) {
+    var n = Math.max(2, Math.round(L.len / 160));
+    for (var k = 0; k < n; k++) {
+      parts.push({ L: L, o: (k / n + i * 0.137) % 1, c: el('circle', { r: 3.2, fill: 'var(--bg)', stroke: 'var(--l-' + L.id + ')', 'stroke-width': 1.3 }, L.g) });
+    }
+  });
+  var SPEED = 45; // units per second
+  function tick(ts) {
+    parts.forEach(function (p) {
+      var f = (p.o + ts / 1000 * SPEED / p.L.len) % 1;
+      var pt = p.L.path.getPointAtLength(f * p.L.len);
+      p.c.setAttribute('cx', pt.x); p.c.setAttribute('cy', pt.y);
+    });
+    var ph = (ts / 2400) % 1;
+    pulse.setAttribute('r', 28 + ph * 28); pulse.style.opacity = (1 - ph) * .5;
+    if (!reduce) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // ---------- camera ----------
+  // Fits a world-space box into the free screen area right of the text panel.
+  var svg = document.getElementById('svg');
+  function toSvg(px, py) { var p = svg.createSVGPoint(); p.x = px; p.y = py; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+  function camera(id) {
+    var W = window.innerWidth, H = window.innerHeight, mobile = W <= 900;
+    var rect = svg.getBoundingClientRect();
+    var area = mobile ? { l: 16, r: rect.width - 16, t: 40, b: rect.height - 16 } : { l: Math.max(560, W * 0.45), r: W - 50, t: 100, b: H - 120 };
+    var box;
+    if (id) {
+      var r = roleById[id], a = r.i === 0 ? -110 : r.x - G * 0.9, b = r.i === ROLES.length - 1 ? XT + 70 : r.x + G * 1.6;
+      box = { x0: a, x1: b, y0: laneY(0) - 46 - 3 * 44 - 30, y1: laneY(7) + 100 };
+    } else {
+      box = { x0: -110, x1: XT + 50, y0: laneY(0) - 46 - 3 * 44 - 30, y1: laneY(7) + 100 };
+    }
+    var p0 = toSvg(rect.left + area.l, rect.top + area.t), p1 = toSvg(rect.left + area.r, rect.top + area.b);
+    var k = Math.min((p1.x - p0.x) / (box.x1 - box.x0), (p1.y - p0.y) / (box.y1 - box.y0), 2.2);
+    var cx = (box.x0 + box.x1) / 2, cy = (box.y0 + box.y1) / 2;
+    var fx = (p0.x + p1.x) / 2, fy = (p0.y + p1.y) / 2;
+    world.style.transform = 'translate(' + (fx - k * cx) + 'px,' + (fy - k * cy) + 'px) scale(' + k + ')';
+    var s = Math.max(rect.width / 1600, rect.height / 1000) * k;
+    scaled.forEach(function (e) { e[0].style.fontSize = (e[1] / s) + 'px'; });
+  }
+
+  // ---------- chapters ----------
+  var panel = document.getElementById('panel'), nav = document.getElementById('chapters');
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  CH.forEach(function (c, i) {
+    var a = document.createElement('article');
+    a.hidden = true;
+    var html = '<div class="kicker"><span class="idx">' + pad(i) + '</span>' + c.kicker + '</div>';
+    html += c.h1 ? '<h1>' + c.h1 + '</h1>' : '<h2>' + c.h2 + '</h2>';
+    if (c.meta) html += '<div class="role-meta">' + c.meta + '</div>';
+    if (c.lead) html += '<p class="lead">' + c.lead + '</p>';
+    if (c.figs) html += '<div class="figs">' + c.figs.map(function (f) {
+      return '<div class="fig"><div class="n">' + f[0] + (f[1] ? '<small>' + f[1] + '</small>' : '') + '</div><div class="l">' + f[2] + '</div></div>';
+    }).join('') + '</div>';
+    if (c.cmp) {
+      var max = Math.max.apply(null, c.cmp.rows.map(function (r) { return r[1]; }));
+      html += '<div class="cmp"><div class="cmp-title">' + c.cmp.title + '</div>' + c.cmp.rows.map(function (r, j) {
+        var w = (r[1] / max * 78).toFixed(2);
+        return '<div class="cmp-row' + (j ? ' hi' : '') + '"><span>' + r[0] + '</span><div class="rail"><div class="fill" data-w="' + w + '"></div><span class="val" data-w="' + w + '" style="left:0">' + r[2] + '</span></div></div>';
+      }).join('') + '</div>';
+    }
+    var added = c.focus ? LINES.filter(function (L) { return L.at === c.focus; }) : (c.allLines ? LINES.slice().reverse() : []);
+    if (added.length) {
+      html += '<div class="chips"><div class="chips-title">' + (c.focus ? 'Added to the stack here' : 'Capabilities on the map') + '</div>' +
+        added.map(function (L) { return '<div class="chip"><i style="background:var(--l-' + L.id + ')"></i>' + L.name + '</div>'; }).join('') + '</div>';
+    }
+    if (c.points) html += '<ul class="points">' + c.points.map(function (p) { return '<li><b>' + p[0] + '</b>' + p[1] + '</li>'; }).join('') + '</ul>';
+    if (c.hint) html += '<p class="hint">' + c.hint + '</p>';
+    a.innerHTML = html;
+    panel.appendChild(a);
+    c.article = a;
+
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = pad(i) + ' ' + c.nav;
+    b.addEventListener('click', function () { stop(); go(i); });
+    nav.appendChild(b);
+    c.btn = b;
+  });
+
+  var cur = -1;
+  function go(i) {
+    i = (i + CH.length) % CH.length;
+    if (i === cur) return;
+    if (cur >= 0) { CH[cur].article.hidden = true; CH[cur].btn.removeAttribute('aria-current'); }
+    cur = i;
+    var c = CH[i];
+    c.article.hidden = false;
+    c.btn.setAttribute('aria-current', 'step');
+    c.btn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    panel.scrollTop = 0;
+    var role = c.focus ? roleById[c.focus] : null;
+    ROLES.forEach(function (r) {
+      var on = r === role;
+      r.node.classList.toggle('on', on);
+      r.label.classList.toggle('strong', on);
+    });
+    LINES.forEach(function (L) {
+      var future = role && roleById[L.at].i > role.i;
+      var past = role && !future && L.at !== role.id;
+      L.g.classList.toggle('future', !!future);
+      L.g.classList.toggle('past', !!past);
+      L.label.style.opacity = future ? .15 : (past ? .55 : 1);
+      L.label.classList.toggle('strong', !!role && L.at === role.id);
+    });
+    gLabels.classList.toggle('hide-stations', c.stations === false);
+    gLabels.classList.toggle('dimmed', !!role);
+    camera(c.focus);
+    requestAnimationFrame(function () {
+      c.article.querySelectorAll('.fill').forEach(function (f) { f.style.width = '0'; });
+      c.article.querySelectorAll('.val').forEach(function (v) { v.style.left = '0'; });
+      requestAnimationFrame(function () {
+        c.article.querySelectorAll('.fill').forEach(function (f) { f.style.width = f.dataset.w + '%'; });
+        c.article.querySelectorAll('.val').forEach(function (v) { v.style.left = v.dataset.w + '%'; });
+      });
+    });
+    if (history.replaceState) history.replaceState(null, '', '#' + pad(i));
+  }
+
+  ROLES.forEach(function (r) {
+    r.node.addEventListener('click', function () {
+      var i = CH.findIndex(function (c) { return c.focus === r.id; });
+      if (i >= 0) { stop(); go(i); }
+    });
+  });
+
+  // ---------- controls ----------
+  var timer = null, playBtn = document.getElementById('play');
+  function stop() { clearInterval(timer); timer = null; playBtn.setAttribute('aria-pressed', 'false'); playBtn.textContent = 'Autoplay'; }
+  playBtn.addEventListener('click', function () {
+    if (timer) return stop();
+    playBtn.setAttribute('aria-pressed', 'true'); playBtn.textContent = 'Pause';
+    timer = setInterval(function () { go(cur + 1); }, 6000);
+  });
+  document.getElementById('prev').addEventListener('click', function () { stop(); go(cur - 1); });
+  document.getElementById('next').addEventListener('click', function () { stop(); go(cur + 1); });
+  var root = document.documentElement;
+  var saved = null; try { saved = localStorage.getItem('theme'); } catch (e) {}
+  if (saved) root.dataset.theme = saved;
+  document.getElementById('theme').addEventListener('click', function () {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+  });
+  function fullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (root.requestFullscreen) root.requestFullscreen();
+  }
+  document.getElementById('full').addEventListener('click', fullscreen);
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest('input, textarea')) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); stop(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); stop(); go(cur - 1); }
+    else if (e.key === 'f' || e.key === 'F') fullscreen();
+    else if (e.key === 'Home') { stop(); go(0); }
+  });
+  window.addEventListener('resize', function () { camera(CH[cur].focus); });
+
+  var start = parseInt((location.hash || '').slice(1), 10);
+  go(isNaN(start) ? 0 : start);
+})();
+</script>
+</body>
+</html>
