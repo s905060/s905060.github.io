@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- Known-bad page for scripts/check-visual.mjs. It must fail; CI checks that. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>check-visual fixture</title>
+  <style>
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    #motion { animation: fade 0.3s; }
+  </style>
+</head>
+<body>
+  <section id="impact">
+    <h2>Impact</h2>
+    <p>Grew daily ingest from 50TB to 300TB.</p>
+  </section>
+  <section id="motion">
+    <h2>Motion</h2>
+    <p>Animates without a reduced-motion guard.</p>
+  </section>
+</body>
+</html>

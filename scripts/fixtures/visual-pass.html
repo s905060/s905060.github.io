@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- Known-good page for scripts/check-visual.mjs. It must pass; CI checks that. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>check-visual fixture</title>
+  <style>
+    section { margin: 600px 0; }
+    .reveal { opacity: 1; }
+    button:focus-visible { outline: 2px solid #1a5fb4; }
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.3s, transform 0.3s; }
+      .reveal.in { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <section id="impact" class="reveal">
+    <h2>Impact</h2>
+    <p>Grew daily ingest from 50TB to 300TB.</p>
+    <svg width="120" height="40" role="img" aria-label="Ingest grew 6x">
+      <rect width="20" height="40" y="0"></rect>
+    </svg>
+  </section>
+  <section id="details" class="reveal">
+    <h2>Details</h2>
+    <button type="button" aria-expanded="false">Show more</button>
+  </section>
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) e.target.classList.add('in');
+    });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+name: visual-design
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  check-visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Calibrate the check on known pages
+        run: |
+          node scripts/check-visual.mjs scripts/fixtures/visual-pass.html
+          if node scripts/check-visual.mjs scripts/fixtures/visual-fail.html; then
+            echo "check-visual passed a page that breaks the rules"
+            exit 1
+          fi
+      - name: Check index.html
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if git diff --quiet "$BASE" HEAD -- index.html scripts.js images; then
+            echo "Page unchanged; skipping."
+          else
+            node scripts/check-visual.mjs
+          fi
