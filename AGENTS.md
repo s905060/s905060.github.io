@@ -30,8 +30,7 @@ the rules marked (checked).
 ## Skills
 
 For any UI change, load `frontend-design` and `impeccable` (per the global
-contract), plus `dataviz` for charts and stat tiles. Use `epic-infographics`
-for standalone infographic images.
+contract), plus `dataviz` for charts and stat tiles.
 
 ## Done means
 
