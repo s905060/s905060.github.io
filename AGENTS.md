@@ -33,6 +33,10 @@ For any UI change, load `frontend-design` and `impeccable` (per the global
 contract), plus `dataviz` for charts and stat tiles. Use `epic-infographics`
 for standalone infographic images.
 
+Ponytail is required for all code changes here: apply it while building, and
+run `ponytail-review` on the branch diff before opening a PR. Its "smallest
+change" rule never overrides the visual design rules above.
+
 ## Done means
 
 - `node scripts/check-visual.mjs` passes. It needs a local Chrome; set
